@@ -1,2 +1,0 @@
-# Percolation
-Created with CodeSandbox
