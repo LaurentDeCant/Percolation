@@ -18,4 +18,4 @@ class UnionFind {
     }
 }
 
-module.exports = UnionFind;
+export default UnionFind;

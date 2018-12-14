@@ -1,4 +1,4 @@
-const UnionFind = require('./unionFind');
+import UnionFind from "./unionFind";
 
 test('fails', () => {
     expect(true).toBe(false);
