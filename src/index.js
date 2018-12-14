@@ -2,22 +2,47 @@ import {
   COLUMNS,
   HEIGHT,
   ROWS,
-  WIDTH
+  WIDTH,
 } from './constants';
-import UnionFind from "./unionFind";
 
-let sites, canvas;
-
-initializeSites();
-initializeCanvas();
-render();
+let sites;
+let canvas;
 
 function initializeSites() {
   sites = new Array(ROWS);
-  for (let i = 0; i < sites.length; i++) {
+  for (let i = 0; i < sites.length; i += 1) {
     sites[i] = new Array(COLUMNS);
-    for (let j = 0; j < sites[i].length; j++) sites[i][j] = false;
+    for (let j = 0; j < sites[i].length; j += 1) {
+      sites[i][j] = false;
+    }
   }
+}
+
+function getRow(y) {
+  return parseInt(y / HEIGHT, 10);
+}
+
+function getColumn(x) {
+  return parseInt(x / WIDTH, 10);
+}
+
+function render() {
+  const context = canvas.getContext('2d');
+  for (let i = 0; i < sites.length; i += 1) {
+    for (let j = 0; j < sites[i].length; j += 1) {
+      const x = j * WIDTH + j;
+      const y = i * HEIGHT + i;
+      context.fillStyle = sites[i][j] ? 'white' : 'black';
+      context.fillRect(x, y, WIDTH, HEIGHT);
+    }
+  }
+}
+
+function handleOnClick(event) {
+  const row = getRow(event.offsetY);
+  const column = getColumn(event.offsetX);
+  sites[row][column] = true;
+  render();
 }
 
 function initializeCanvas() {
@@ -27,28 +52,6 @@ function initializeCanvas() {
   canvas.addEventListener('click', handleOnClick);
 }
 
-function handleOnClick(event) {
-  let row = getRow(event.offsetY);
-  let column = getColumn(event.offsetX);
-  sites[row][column] = true;
-  render();
-}
-
-function getRow(y) {
-  return parseInt(y / HEIGHT);
-}
-
-function getColumn(x) {
-  return parseInt(x / WIDTH);
-}
-
-function render() {
-  let context = canvas.getContext('2d');
-  for (let i = 0; i < sites.length; i++)
-    for (let j = 0; j < sites[i].length; j++) {
-      let x = j * WIDTH + j;
-      let y = i * HEIGHT + i;
-      context.fillStyle = sites[i][j] ? 'white' : 'black';
-      context.fillRect(x, y, WIDTH, HEIGHT);
-    }
-}
+initializeSites();
+initializeCanvas();
+render();
