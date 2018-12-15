@@ -19,12 +19,14 @@ class UnionFind {
   union(indexX, indexY) {
     const rootX = this.find(indexX);
     const rootY = this.find(indexY);
-    if (this.sizes[rootX] < this.sizes[rootY]) {
-      this.items[rootX] = rootY;
-      this.sizes[rootY] += this.sizes[rootX];
-    } else {
-      this.items[rootY] = rootX;
-      this.sizes[rootX] += this.sizes[rootY];
+    if (this.items[rootX] !== this.items[rootY]) {
+      if (this.sizes[rootX] < this.sizes[rootY]) {
+        this.items[rootX] = rootY;
+        this.sizes[rootY] += this.sizes[rootX];
+      } else {
+        this.items[rootY] = rootX;
+        this.sizes[rootX] += this.sizes[rootY];
+      }
     }
   }
 }
