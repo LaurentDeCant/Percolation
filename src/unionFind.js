@@ -9,11 +9,11 @@ class UnionFind {
   }
 
   find(index) {
-    let value = this.items[index];
-    while (value !== this.items[value]) {
-      value = this.items[value];
+    let root = index;
+    while (root !== this.items[root]) {
+      root = this.items[root];
     }
-    return value;
+    return root;
   }
 
   union(indexX, indexY) {
