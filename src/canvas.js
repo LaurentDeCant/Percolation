@@ -1,7 +1,7 @@
 export const HEIGHT = 100;
 export const WIDTH = 100;
 
-class Renderer {
+class Canvas {
   static getRow(y) {
     return parseInt(y / HEIGHT, 10);
   }
@@ -20,8 +20,8 @@ class Renderer {
   }
 
   handleOnClick(event) {
-    const row = Renderer.getRow(event.offsetY);
-    const column = Renderer.getColumn(event.offsetX);
+    const row = Canvas.getRow(event.offsetY);
+    const column = Canvas.getColumn(event.offsetX);
     this.clickListener(row, column);
     this.render();
   }
@@ -47,4 +47,4 @@ class Renderer {
   }
 }
 
-export default Renderer;
+export default Canvas;
