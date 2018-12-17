@@ -5,13 +5,14 @@ const ROOT_INDEX = 0;
 export const CLOSED = 1;
 export const OPEN = 2;
 export const CONNECTED = 3;
+export const PERCOLATED = 4;
 
 class Sites {
   constructor(rows, columns) {
     this.rows = rows;
     this.columns = columns;
     this.buildTable(rows, columns);
-    this.buildUnionFind(rows, columns);
+    this.buildUnionFinds(rows, columns);
   }
 
   buildTable(rows, columns) {
@@ -24,10 +25,14 @@ class Sites {
     }
   }
 
-  buildUnionFind(rows, columns) {
-    this.unionFind = new UnionFind(rows * columns + 1);
-    for (let i = 0; i < columns; i += 1) {
-      this.unionFind.union(ROOT_INDEX, i + 1);
+  buildUnionFinds(rows, columns) {
+    this.topUnionFind = new UnionFind(rows * columns + 1);
+    for (let i = 1; i <= columns; i += 1) {
+      this.topUnionFind.union(ROOT_INDEX, i);
+    }
+    this.bottomUnionFind = new UnionFind(rows * columns + 1);
+    for (let i = rows * columns; i > rows * columns - columns; i -= 1) {
+      this.bottomUnionFind.union(ROOT_INDEX, i);
     }
   }
 
@@ -45,8 +50,10 @@ class Sites {
       .filter(x => this.table[x.row][x.column] === OPEN)
       .forEach((x) => {
         const index = this.map(row, column);
-        this.unionFind.union(index, this.map(x.row, x.column));
+        this.topUnionFind.union(index, this.map(x.row, x.column));
+        this.bottomUnionFind.union(index, this.map(x.row, x.column));
       });
+    return this.percolated(row, column);
   }
 
   getNeighbors(row, column) {
@@ -70,12 +77,21 @@ class Sites {
     return row * this.columns + column + 1;
   }
 
+  percolated(row, column) {
+    return this.topUnionFind.find(ROOT_INDEX) === this.topUnionFind.find(this.map(row, column))
+      && this.bottomUnionFind.find(ROOT_INDEX) === this.bottomUnionFind.find(this.map(row, column));
+  }
+
   get(row, column) {
     switch (this.table[row][column]) {
       case OPEN:
-        return this.unionFind.find(ROOT_INDEX) === this.unionFind.find(this.map(row, column))
-          ? CONNECTED
-          : OPEN;
+        if (this.topUnionFind.find(ROOT_INDEX) === this.topUnionFind.find(this.map(row, column))) {
+          if (this.bottomUnionFind.find(ROOT_INDEX) === this.bottomUnionFind.find(this.map(row, column))) {
+            return PERCOLATED;
+          }
+          return CONNECTED;
+        }
+        return OPEN;
       case CLOSED:
       default:
         return CLOSED;

@@ -2,16 +2,18 @@ import Sites, {
   CLOSED,
   OPEN,
   CONNECTED,
+  PERCOLATED,
 } from './sites';
 
-const HEIGHT = 100;
-const WIDTH = 100;
+const HEIGHT = 50;
+const WIDTH = 50;
 
 const CLOSED_COLOR = 'black';
 const OPEN_COLOR = 'white';
-const CONNECTED_COLOR = 'blue';
+const CONNECTED_COLOR = 'red';
+const PERCOLATED_COLOR = 'green';
 
-class Canvas {
+class Percolator {
   static getRow(y) {
     return parseInt(y / HEIGHT, 10);
   }
@@ -20,17 +22,17 @@ class Canvas {
     return parseInt(x / WIDTH, 10);
   }
 
-  constructor(rows, columns) {
-    this.sites = new Sites(rows, columns);
-    this.canvas = document.getElementById('canvas');
+  constructor(canvas, rows, columns) {
+    this.canvas = canvas;
     this.canvas.height = rows * HEIGHT + rows - 2;
     this.canvas.width = columns * WIDTH + columns - 2;
     this.canvas.addEventListener('click', event => this.handleOnClick(event));
+    this.sites = new Sites(rows, columns);
   }
 
   handleOnClick(event) {
-    const row = Canvas.getRow(event.offsetY);
-    const column = Canvas.getColumn(event.offsetX);
+    const row = Percolator.getRow(event.offsetY);
+    const column = Percolator.getColumn(event.offsetX);
     this.sites.open(row, column);
     this.render();
   }
@@ -55,10 +57,12 @@ class Canvas {
         return OPEN_COLOR;
       case CONNECTED:
         return CONNECTED_COLOR;
+      case PERCOLATED:
+        return PERCOLATED_COLOR;
       default:
         return CLOSED_COLOR;
     }
   }
 }
 
-export default Canvas;
+export default Percolator;

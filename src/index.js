@@ -1,7 +1,10 @@
-import Board from './board';
+import Percolator from './percolator';
 
-const ROWS = 5;
-const COLUMNS = 5;
+const ROWS = 10;
+const COLUMNS = 10;
 
-const board = new Board(ROWS, COLUMNS);
-board.render();
+new Percolator(
+  document.getElementById('canvas'),
+  ROWS,
+  COLUMNS,
+).render();
