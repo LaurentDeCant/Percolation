@@ -31,13 +31,21 @@ class Sites {
     }
   }
 
+  rows() {
+    return this.rows;
+  }
+
+  columns() {
+    return this.columns;
+  }
+
   open(row, column) {
     this.table[row][column] = OPEN;
     this.getNeighbors(row, column)
       .filter(x => this.table[x.row][x.column] === OPEN)
       .forEach((x) => {
-        const index = this.mapIndex(row, column);
-        this.unionFind.union(index, this.mapIndex(x.row, x.column));
+        const index = this.map(row, column);
+        this.unionFind.union(index, this.map(x.row, x.column));
       });
   }
 
@@ -58,14 +66,14 @@ class Sites {
       && x.column >= 0 && x.column < this.columns);
   }
 
-  mapIndex(row, column) {
+  map(row, column) {
     return row * this.columns + column + 1;
   }
 
-  getSite(row, column) {
+  get(row, column) {
     switch (this.table[row][column]) {
       case OPEN:
-        return this.unionFind.find(ROOT_INDEX) === this.unionFind.find(this.mapIndex(row, column))
+        return this.unionFind.find(ROOT_INDEX) === this.unionFind.find(this.map(row, column))
           ? CONNECTED
           : OPEN;
       case CLOSED:
